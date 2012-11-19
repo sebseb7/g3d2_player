@@ -1,0 +1,7 @@
+g3d2 player
+============
+
+uses a pentarm32f4 box to play animations on the g3d2
+
+includes an sdl simulator for developing animations
+
