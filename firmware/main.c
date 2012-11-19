@@ -45,11 +45,21 @@ struct animation {
 
 static struct animation animations[MAX_ANIMATIONS] CCM_ATTRIBUTES;
 
-uint8_t leds[LED_HEIGHT][LED_WIDTH];
+uint8_t leds[LED_HEIGHT][LED_WIDTH] CCM_ATTRIBUTES;
 void setLedXY(uint8_t x, uint8_t y, uint8_t green) {
 	if (x >= LED_WIDTH) return;
 	if (y >= LED_HEIGHT) return;
 	leds[y][x] = green;
+}
+
+void fillG(int8_t green) {
+	for(int x = 0; x < LED_HEIGHT;x++)
+	{
+		for(int y = 0;y < (LED_WIDTH>>1);y++)
+		{
+			leds[x][y] = green;
+		}
+	}
 }
 
 void sendByte(uint8_t byte)
@@ -127,7 +137,7 @@ int main(void)
 	//prepare init structure
 	{
 		GPIO_InitTypeDef GPIO_InitStructure;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -196,7 +206,7 @@ int main(void)
 		{
 			for(int y = 0;y < (LED_WIDTH>>1);y++)
 			{
-				sendByteEscaped( (leds[x][y+1]<<4) + leds[x][y]  );
+				sendByteEscaped( (leds[x][y*2+1]<<4) + (leds[x][y*2]&0xf)  );
 			}
 		}
 
@@ -206,7 +216,7 @@ int main(void)
 		tick_count++;
 
 
-/*		if(get_key_press(KEY_STICK))
+		if(tick_count == animations[current_animation].duration)
 		{
 			animations[current_animation].deinit_fp();
 
@@ -217,12 +227,12 @@ int main(void)
 			}
 			tick_count=0;
 	
-			lcdFillRGB(0,0,0);
+			fillG(0);
 
 			animations[current_animation].init_fp();
 
 
 		}
-*/	}
+	}
 
 }

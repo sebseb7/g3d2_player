@@ -8,6 +8,7 @@
 #include "main.h"
 #include <string.h>
 #include<sys/time.h>
+#include "sdl_draw/SDL_draw.h"
 
 
 
@@ -39,8 +40,12 @@ struct app {
 
 
 SDL_Surface* screen;
+void Delay(uint16_t t)
+{
+	
+}
 
-uint8_t leds[LED_HEIGHT][LED_WIDTH][2];
+int leds[LED_HEIGHT][LED_WIDTH][2];
 void setLedXY(uint8_t x, uint8_t y, uint8_t green) {
 	if (x >= LED_WIDTH) return;
 	if (y >= LED_HEIGHT) return;
@@ -114,6 +119,24 @@ int main(int argc __attribute__((__unused__)), char *argv[] __attribute__((__unu
 	int running = 1;
 	//unsigned long long int startTime = get_clock();
 	Uint32 lastFrame = SDL_GetTicks(); 
+	const unsigned int COLORS[] = {
+		SDL_MapRGB(screen->format, 0x00,0x10,0x00),
+		SDL_MapRGB(screen->format, 0x09,0x20,0x00),
+		SDL_MapRGB(screen->format, 0x12,0x30,0x00),
+		SDL_MapRGB(screen->format, 0x1b,0x40,0x00),
+		SDL_MapRGB(screen->format, 0x24,0x50,0x00),
+		SDL_MapRGB(screen->format, 0x2d,0x60,0x00),
+		SDL_MapRGB(screen->format, 0x36,0x70,0x00),
+		SDL_MapRGB(screen->format, 0x3f,0x80,0x00),
+		SDL_MapRGB(screen->format, 0x48,0x90,0x00),
+		SDL_MapRGB(screen->format, 0x51,0xa0,0x00),
+		SDL_MapRGB(screen->format, 0x5a,0xb0,0x00),
+		SDL_MapRGB(screen->format, 0x63,0xc0,0x00),
+		SDL_MapRGB(screen->format, 0x6c,0xd0,0x00),
+		SDL_MapRGB(screen->format, 0x75,0xe0,0x00),
+		SDL_MapRGB(screen->format, 0x7e,0xf0,0x00),
+		SDL_MapRGB(screen->format, 0x87,0xff,0x00)
+	};
 
 	while(running) {
 		SDL_Event ev;
@@ -170,13 +193,8 @@ int main(int argc __attribute__((__unused__)), char *argv[] __attribute__((__unu
 
 				if(leds[y][x][1] == 1)
 				{
+					Draw_FillCircle(screen, ZOOM*x + ZOOM/2, ZOOM*y + ZOOM/2, ZOOM*0.45, COLORS[leds[y][x][0]]);
 
-					SDL_Rect rect = { x*ZOOM, y*ZOOM, ZOOM,ZOOM };
-					SDL_FillRect(
-						screen, 
-						&rect, 
-						SDL_MapRGB(screen->format, 0,(uint8_t)(leds[y][x][0]<<4),0)
-					);
 					leds[y][x][1] = 0;
 
 				}
@@ -210,7 +228,9 @@ int main(int argc __attribute__((__unused__)), char *argv[] __attribute__((__unu
 				current_animation = 0;
 			}
 			tick_count=0;
-	
+
+			SDL_Delay(1000);
+
 			fillG(0);
 
 			animations[current_animation].init_fp();

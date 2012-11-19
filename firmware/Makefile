@@ -9,7 +9,15 @@ OPTIMIZATION = -O2
 
 SRC=$(wildcard  *.c libs/*.c) \
 	core/syscalls.c core/stm32fxxx_it.c core/system_stm32f4xx.c \
-	../animations/plasma_bigsin.c
+	../animations/interference2.c \
+	../animations/lib/sektor.c \
+	../animations/interference.c \
+	../animations/plasma3.c \
+	../animations/fader.c \
+	../animations/plasma2.c \
+	../animations/plasma.c \
+	../animations/strobe2.c \
+	../animations/strobe.c
 
 
 ASRC=core/startup_stm32f4xx.s

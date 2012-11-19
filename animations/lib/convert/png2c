@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+use strict;
+use GD;
+
+my $image = GD::Image->newFromPng('sek.png');
+(my $width,my $height) = $image->getBounds();
+
+
+foreach my $y (0..($height-1))
+{
+	print "{";
+	foreach my $x (0..($width-1))
+	{
+		(my $r,my $g, my $b) = $image->rgb($image->getPixel($x,$y));
+		
+		$g = int((254-$g)/16);
+		$g = 15 if $g > 15;
+		print $g.","
+	}
+	print "},\n";
+}

@@ -30,6 +30,7 @@ int sdlpause;
 void registerAnimation(init_fun init,tick_fun tick,deinit_fun deinit, uint16_t t, uint16_t duration);
 void setLedXY(uint8_t x,uint8_t  y, uint8_t g);
 void invLedXY(uint8_t x,uint8_t  y);
+void Delay(uint16_t t);
 void getLedXY(uint8_t x, uint8_t y, uint8_t* green);
 #endif
 
