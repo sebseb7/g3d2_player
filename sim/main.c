@@ -45,6 +45,11 @@ void Delay(uint16_t t)
 	
 }
 
+uint32_t getSysTick(void)
+{
+	return SDL_GetTicks()*10;
+}
+
 int leds[LED_HEIGHT][LED_WIDTH][2];
 void setLedXY(uint8_t x, uint8_t y, uint8_t green) {
 	if (x >= LED_WIDTH) return;
