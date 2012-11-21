@@ -10,6 +10,9 @@ enum {
 };
 
 #define G3D2
+
+uint32_t getSysTick(void);
+
 #define SIMULATOR
 
 #define CONSTRUCTOR_ATTRIBUTES	__attribute__((constructor));
