@@ -9,6 +9,7 @@ enum {
 	ZOOM = 15
 };
 
+#define G3D2
 #define SIMULATOR
 
 #define CONSTRUCTOR_ATTRIBUTES	__attribute__((constructor));

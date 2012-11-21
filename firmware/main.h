@@ -5,6 +5,7 @@
 
 #define LED_WIDTH 72
 #define LED_HEIGHT 32
+#define G3D2
 
 void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
