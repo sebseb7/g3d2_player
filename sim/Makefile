@@ -2,8 +2,12 @@ UNAME := $(shell uname)
 
 COMPILER = gcc
 
+# SINGLE (72x32) ; 2_LINEAR (144x32) ; 2_BLOCK (72x64)
 
-FLAGS= -I. -I../firmware --std=gnu99 -Wall  -funsigned-char -Wundef -Wsign-compare  -Wstrict-prototypes  -fsingle-precision-constant 
+LAYOUT = 2_BLOCK
+
+
+FLAGS= -DLAYOUT_$(LAYOUT) -I. -I../firmware --std=gnu99 -Wall  -funsigned-char -Wundef -Wsign-compare  -Wstrict-prototypes  -fsingle-precision-constant 
 LDFLAGS=
 BINEXT=
 

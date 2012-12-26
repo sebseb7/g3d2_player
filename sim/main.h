@@ -4,9 +4,17 @@
 #include <stdint.h>
 
 enum {
+#if defined(LAYOUT_SINGLE)
 	LED_WIDTH = 72,
 	LED_HEIGHT = 32,
-	ZOOM = 15
+#elif defined(LAYOUT_2_LINEAR)
+	LED_WIDTH = 144,
+	LED_HEIGHT = 32,
+#elif defined(LAYOUT_2_BLOCK)
+	LED_WIDTH = 72,
+	LED_HEIGHT = 64,
+#endif
+	ZOOM = 8
 };
 
 #define G3D2

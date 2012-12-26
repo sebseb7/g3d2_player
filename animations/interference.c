@@ -9,10 +9,10 @@ static uint16_t a = 0;
 static uint8_t tick(void) {
 
 	
-	float x0 = sini(a*40)/910.0f;
-	float y0 = sini((a*80)+0x1000)/2048.0f;
-	float x1 = sini(a*60)/910.0f;
-	float y1 = sini((a*30)+0x1000)/2048.0f;
+	float x0 = sini(a*40)/(0xffff/(float)LED_WIDTH);
+	float y0 = sini((a*80)+0x1000)/(0xffff/(float)LED_HEIGHT);
+	float x1 = sini(a*60)/(0xffff/(float)LED_WIDTH);
+	float y1 = sini((a*30)+0x1000)/(0xffff/(float)LED_HEIGHT);
 	uint8_t x, y;
 
 	for(y = 0; y < LED_HEIGHT; y++) 

@@ -51,6 +51,11 @@ void setLedXY(uint8_t x, uint8_t y, uint8_t green) {
 	if (y >= LED_HEIGHT) return;
 	leds[y][x] = green;
 }
+void getLedXY(uint8_t x, uint8_t y,uint8_t* green) {
+	if (x >= LED_WIDTH) return;
+	if (y >= LED_HEIGHT) return;
+	*green = leds[y][x];
+}
 
 void fillG(int8_t green) {
 	for(int x = 0; x < LED_HEIGHT;x++)
@@ -62,34 +67,34 @@ void fillG(int8_t green) {
 	}
 }
 
-void sendByte(uint8_t byte)
+void sendByte(USART_TypeDef* USARTx,uint8_t byte)
 {
-	USART_SendData(USART2, byte);
-	while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET){};
+	USART_SendData(USARTx, byte);
+	while (USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET){};
 }
 
-void sendByteEscaped(uint8_t byte)
+void sendByteEscaped(USART_TypeDef* USARTx,uint8_t byte)
 {
 	switch (byte)
 	{
 		case 0x65:
-			sendByte(0x65);
-			sendByte(0x03);
+			sendByte(USARTx,0x65);
+			sendByte(USARTx,0x03);
 			break;
 		case 0x23:
-			sendByte(0x65);
-			sendByte(0x01);
+			sendByte(USARTx,0x65);
+			sendByte(USARTx,0x01);
 			break;
 		case 0x42:
-			sendByte(0x65);
-			sendByte(0x02);
+			sendByte(USARTx,0x65);
+			sendByte(USARTx,0x02);
 			break;
 		case 0x66:
-			sendByte(0x65);
-			sendByte(0x04);
+			sendByte(USARTx,0x65);
+			sendByte(USARTx,0x04);
 			break;
 		default:
-			sendByte(byte);
+			sendByte(USARTx,byte);
 			break;
 	}
 }
@@ -123,6 +128,14 @@ int main(void)
 {
 	RCC_ClocksTypeDef RCC_Clocks;
 
+
+	for(int x = 0 ; x < LED_WIDTH;x++)
+	{
+		for(int y = 0; y < LED_HEIGHT; y++)
+		{
+			leds[y][x] = 0;
+		}
+	}
 
 	RCC_GetClocksFreq(&RCC_Clocks);
 	/* SysTick end of count event each 0.1ms */
@@ -175,6 +188,32 @@ int main(void)
 		USART_Init(USART2, &USART_InitStructure);
 		USART_Cmd(USART2, ENABLE);
 	}
+	{
+		GPIO_InitTypeDef GPIO_InitStructure;
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_UART4);
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_UART4);
+
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+		GPIO_Init(GPIOA, &GPIO_InitStructure);
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+		GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+		USART_InitTypeDef USART_InitStructure;
+		USART_InitStructure.USART_BaudRate = 500000;
+		USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+		USART_InitStructure.USART_StopBits = USART_StopBits_1;
+		USART_InitStructure.USART_Parity = USART_Parity_No;
+		USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+		USART_Init(UART4, &USART_InitStructure);
+		USART_Cmd(UART4, ENABLE);
+	}
 	int current_animation = 0;
 	animations[current_animation].init_fp();
 	int tick_count = 0;
@@ -200,13 +239,21 @@ int main(void)
 
 		GPIOB->ODR           |=       1<<12;
 
-		sendByte(0x23);
+		sendByte(USART2,0x23);
+		sendByte(UART4,0x23);
 
-		for(int x = 0; x < LED_HEIGHT;x++)
+		for(int x = 0; x < 32;x++)
 		{
 			for(int y = 0;y < (LED_WIDTH>>1);y++)
 			{
-				sendByteEscaped( (leds[x][y*2+1]<<4) + (leds[x][y*2]&0xf)  );
+				sendByteEscaped(USART2, (leds[x][y*2+1]<<4) + (leds[x][y*2]&0xf)  );
+			}
+		}
+		for(int x = 32; x < 64;x++)
+		{
+			for(int y = 0;y < (LED_WIDTH>>1);y++)
+			{
+				sendByteEscaped(UART4, (leds[x][y*2+1]<<4) + (leds[x][y*2]&0xf)  );
 			}
 		}
 

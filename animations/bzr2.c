@@ -10,8 +10,8 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-uint8_t *bzr_a, *bzr_b, *bzr_c;
-uint8_t *t_bzr_a, *t_bzr_b, *t_bzr_c;
+static uint8_t *bzr_a, *bzr_b, *bzr_c;
+static uint8_t *t_bzr_a, *t_bzr_b, *t_bzr_c;
 
 
 static void init(void) {

@@ -1,3 +1,5 @@
+LAYOUT = 2_BLOCK
+
 PROJECT=template
 
 
@@ -6,18 +8,20 @@ LSCRIPT=core/stm32f4xx_flash.ld
 OPTIMIZATION = -O2
 
 #########################################################################
+#	../animations/interference_sektor.c \
+#	../animations/lib/sektor.c \
+#	../animations/eye.c \
+#	../animations/tunnel.c \
+#	../animations/tunnel2.c \
 
 SRC=$(wildcard  *.c libs/*.c) \
 	core/syscalls.c core/stm32fxxx_it.c core/system_stm32f4xx.c \
 	../animations/interference2.c \
-	../animations/lib/sektor.c \
-	../animations/interference.c \
-	../animations/plasma3.c \
-	../animations/fader.c \
+	../animations/bzr.c \
 	../animations/plasma2.c \
-	../animations/plasma.c \
-	../animations/strobe2.c \
-	../animations/strobe.c
+	../animations/interference.c \
+	../animations/bzr2.c \
+	../animations/plasma.c 
 
 
 ASRC=core/startup_stm32f4xx.s
@@ -26,8 +30,8 @@ LSTFILES= $(SRC:.c=.lst)
 HEADERS=$(wildcard core/*.h *.h)
 
 #  Compiler Options
-GCFLAGS = -DSTM32F=4 -ffreestanding -std=gnu99 -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -I. -Icore -DARM_MATH_CM4 -DUSE_STDPERIPH_DRIVER 
-GCFLAGS+= -Dlun1k=1 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -falign-functions=16 
+GCFLAGS = -DLAYOUT_$(LAYOUT) -DSTM32F=4 -ffreestanding -std=gnu99 -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -I. -Icore -DARM_MATH_CM4 -DUSE_STDPERIPH_DRIVER 
+GCFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard -falign-functions=16 
 GCFLAGS+=-ISTM32_USB_Device_Library/Class/cdc/inc
 GCFLAGS+=-ISTM32_USB_OTG_Driver/inc
 GCFLAGS+=-ISTM32_USB_Device_Library/Core/inc

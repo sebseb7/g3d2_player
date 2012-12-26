@@ -12,7 +12,7 @@
 
 
 
-#define FRAMETIME 33
+#define FRAMETIME 22
 
 int sdlpause = 0;
 
@@ -234,9 +234,15 @@ int main(int argc __attribute__((__unused__)), char *argv[] __attribute__((__unu
 			}
 			tick_count=0;
 
-			SDL_Delay(1000);
+			SDL_Rect rect = { 0, 0, LED_WIDTH*ZOOM,LED_HEIGHT*ZOOM };
+			SDL_FillRect(
+				screen, 
+				&rect, 
+				SDL_MapRGB(screen->format,0,0,0)
+			);
+			SDL_Flip(screen);
+			SDL_Delay(300);
 
-			fillG(0);
 
 			animations[current_animation].init_fp();
 
